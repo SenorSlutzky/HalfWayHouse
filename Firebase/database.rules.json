@@ -1,0 +1,37 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('users/' + auth.uid + '/friends').hasChild($uid))",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "rounds": {
+      "$roundId": {
+        ".read": "auth != null && data.child('players').val().contains(auth.uid)",
+        ".write": "auth != null && (data.child('players').val().contains(auth.uid) || !data.exists())",
+        "scores": {
+          "$userId": {
+            ".write": "auth != null && auth.uid == $userId"
+          }
+        },
+        "chat": {
+          ".read": "auth != null && root.child('rounds/' + $roundId + '/players').val().contains(auth.uid)",
+          "$messageId": {
+            ".write": "auth != null && root.child('rounds/' + $roundId + '/players').val().contains(auth.uid)"
+          }
+        }
+      }
+    },
+    "courses": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "inviteCodes": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    }
+  }
+}
